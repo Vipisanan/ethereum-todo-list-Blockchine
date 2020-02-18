@@ -8,6 +8,7 @@ contract TodoList {
     string content;  //this is the text of the task in the todo list contained in a string.
     bool completed;  // this is the checkbox status of the todo list, which is true/false.
   }
+
   event TaskCreated(
     uint id,
     string content,
@@ -28,5 +29,16 @@ contract TodoList {
         createTask("Check out dappuniversity.com");
   }
   
+  event TaskCompleted(
+    uint id,
+    bool completed
+  );
+
+  function toggleCompleted(uint _id) public {
+    Task memory _task = tasks[_id];
+    _task.completed = !_task.completed;
+    tasks[_id] = _task;
+    emit TaskCompleted(_id, _task.completed);
+  }
 
 }
