@@ -55,6 +55,7 @@ App = {
   
       // Hydrate the smart contract with values from the blockchain
       App.todoList = await App.contracts.TodoList.deployed()
+      console.log(App.todoList);
     },
   
     render: async () => {
@@ -85,13 +86,16 @@ App = {
       for (var i = 1; i <= taskCount; i++) {
         // Fetch the task data from the blockchain
         const task = await App.todoList.tasks(i)
+        console.log(task);
         const taskId = task[0].toNumber()
-        const taskContent = task[1]
-        const taskCompleted = task[2]
+        const lat = task[1]
+        const lng = task[2]
+        const taskCompleted = task[3]
   
         // Create the html for the task
         const $newTaskTemplate = $taskTemplate.clone()
-        $newTaskTemplate.find('.content').html(taskContent)
+        $newTaskTemplate.find('.content').html(lat)
+        $newTaskTemplate.find('.lng').html(lng)
         $newTaskTemplate.find('input')
                         .prop('name', taskId)
                         .prop('checked', taskCompleted)
@@ -117,8 +121,10 @@ App = {
 
     createTask : async ()=>{
       App.setLoading(true)
-      const content = $('#newTask').val()
-      await App.todoList.createTask(content)
+      const lat = $('#lat').val()
+      const lng = $('#lng').val()
+      console.log(lat , lng);
+      await App.todoList.createTask(lat ,lng)
       window.location.reload()
     },
   
