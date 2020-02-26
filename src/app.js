@@ -1,7 +1,8 @@
 App = {
     loading: false,
     contracts: {},
-  
+    allBCData :{date:'',coordinate:{}},
+
     load: async () => {
       await App.loadWeb3()
       await App.loadAccount()
@@ -78,6 +79,7 @@ App = {
     },
   
     renderTasks: async () => {
+      var allDataList=[];
       // Load the total task count from the blockchain
       const taskCount = await App.todoList.taskCount()
       const $taskTemplate = $('.taskTemplate')
@@ -86,16 +88,26 @@ App = {
       for (var i = 1; i <= taskCount; i++) {
         // Fetch the task data from the blockchain
         const task = await App.todoList.tasks(i)
-        console.log(task);
+        // console.log(task);
         const taskId = task[0].toNumber()
-        const lat = task[1]
-        const lng = task[2]
+        const date = task[1]
+        const coordinate = task[2]
         const taskCompleted = task[3]
   
         // Create the html for the task
         const $newTaskTemplate = $taskTemplate.clone()
-        $newTaskTemplate.find('.content').html(lat)
-        $newTaskTemplate.find('.lng').html(lng)
+        $newTaskTemplate.find('.date').html(date)
+        const json = coordinate;
+        const obj = JSON.parse(json);
+        // have to map data to another object for easy to find
+        var allData={
+          date:'',
+          coordinate:{}
+        }
+        allData = {date : date , coordinate : obj}
+        allDataList.push(allData);
+
+        $newTaskTemplate.find('.coordinate').html(coordinate)
         $newTaskTemplate.find('input')
                         .prop('name', taskId)
                         .prop('checked', taskCompleted)
@@ -111,6 +123,8 @@ App = {
         // Show the task
         $newTaskTemplate.show()
       }
+      allBCData = allDataList;
+      console.log(allDataList);
     },
     toggleCompleted: async (e) => {
       App.setLoading(true)
@@ -121,11 +135,21 @@ App = {
 
     createTask : async ()=>{
       App.setLoading(true)
-      const lat = $('#lat').val()
-      const lng = $('#lng').val()
-      console.log(lat , lng);
-      await App.todoList.createTask(lat ,lng)
+      const date = $('#date').val()
+      const coordinate = $('#coordinate').val()
+      console.log(date , coordinate);
+      await App.todoList.createTask(date , coordinate)
       window.location.reload()
+    },
+    filterByData : async () => {
+      const fdate = $('#fdate').val()
+      for(var i=0; i<= allBCData.length; i++){
+          if (fdate === allBCData[i].date) {
+            console.log(allBCData[i].coordinate);
+            $('#filteredCoordinate').html(JSON.stringify(allBCData[i].coordinate))
+            $filteredCoordinate.find('.filteredCoordinate').html(allBCData[i].coordinate)
+          }
+      }
     },
   
     setLoading: (boolean) => {
@@ -139,7 +163,15 @@ App = {
         loader.hide()
         content.show()
       }
-    }
+    },
+    myMap: async() => {
+      var mapProp= {
+        center:new google.maps.LatLng(12.508742,82.120850),
+        zoom:5,
+      };
+      
+      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+      }
   }
   
   $(() => {

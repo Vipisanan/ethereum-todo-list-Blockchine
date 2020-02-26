@@ -43,42 +43,65 @@
   </head>
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="http://www.dappuniversity.com/free-download" target="_blank">Dapp University | Todo List</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="http://www.dappuniversity.com/free-download" target="_blank">UoK Research Project | Add Sensitive data in Blockchain</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap d-none d-sm-none d-sm-block">
           <small><a class="nav-link" href="#"><span id="account"></span></a></small>
         </li>
       </ul>
     </nav>
-    <div class="container-fluid">
-      <div class="row">
-        <main role="main" class="col-lg-12 d-flex justify-content-center">
-          <div id="loader" class="text-center">
-            <p class="text-center">Loading...</p>
-          </div>
-          <div id="content">
-            <form onSubmit="App.createTask(); return false;">
-              <input id="lat" type="text" class="form-control" placeholder="Add task..." required>
-              <br>
-              <input id="lng" type="text" class="form-control" placeholder="Add task..." required>
-              <input type="submit" hidden="">
-            </form>
-            <ul id="taskList" class="list-unstyled">
-              <div class="taskTemplate" class="checkbox" style="display: none">
-                <label>
-                  <input type="checkbox" />
-                  <span class="content">Task content goes here...</span> |
-                  <span class="lng">Task content goes here...</span>
-
-                </label>
+    
+    <div class="container-fluid row">
+      <div class="col col-6">
+        <div class="container-fluid">
+          <div class="row">
+            <main role="main" class="col-lg-12 d-flex justify-content-center">
+              <div id="loader" class="text-center">
+                <p class="text-center">Loading...</p>
               </div>
-            </ul>
-            <ul id="completedTaskList" class="list-unstyled">
-            </ul>
+              <div id="content">
+                <form onSubmit="App.createTask(); return false;">
+                  <input id="date" type="date" class="form-control" placeholder="Add date..." required>
+                  <br>
+                  <input id="coordinate" type="text" class="form-control" placeholder="Add coordinate..." required>
+                  <br>
+                  <button type="submit" class="btn btn-primary text-center">Add Sensitive data</button>
+                  <input type="submit" hidden="">
+                </form>
+                <ul id="taskList" class="list-unstyled">
+                  <div class="taskTemplate" class="checkbox" style="display: none">
+                    <label>
+                      <input type="checkbox" />
+                      <span class="date">Task content goes here...</span> |
+                      <span class="coordinate">Task content goes here...</span>
+    
+                    </label>
+                  </div>
+                </ul>
+                <ul id="completedTaskList" class="list-unstyled">
+                </ul>
+              </div>
+            </main>
           </div>
-        </main>
+        </div>
+      </div>
+      <div class="col col-6">
+        <br>
+    <br>
+    <br>
+        <!-- add filter by date -->
+        <form onSubmit="App.filterByData(); return false;">
+          <input id="fdate" type="text" class="form-control" placeholder="Add date..." required>
+          <br>
+          <button type="submit" class="btn btn-primary text-center">filter </button>
+          <div>
+            <span id="filteredCoordinate"></p>
+              <div id="googleMap" style="width:100%;height:400px;"></div>
+          </div>
+        </form>
       </div>
     </div>
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -86,5 +109,19 @@
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
     <script src="app.js"></script>
+
+    <script>
+      function myMap() {
+      var mapProp= {
+        center:new google.maps.LatLng(12.508742,82.120850),
+        zoom:5,
+      };
+      
+      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+      }
+      </script>
+      
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDobm_3OLsu0cFTLt-zUAgt-_7Oi-TkGT4&callback=myMap"></script>
+
   </body>
 </html>
